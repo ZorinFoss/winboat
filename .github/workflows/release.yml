@@ -51,58 +51,57 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Derive artifact naming
+        id: meta
         shell: bash
         run: |
-          echo "NAME=$(node -p "require('./package.json').name")" >> $GITHUB_ENV
-          echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
-          # Try to infer ARCH from any produced Linux artifact; fallback to process.arch
+          echo "NAME=$(node -p \"require('./package.json').name\")" >> $GITHUB_OUTPUT
+          echo "VERSION=$(node -p \"require('./package.json').version\")" >> $GITHUB_OUTPUT
           ARCH_FROM_FILE=$(ls dist/*.{AppImage,deb,rpm,tar.gz} 2>/dev/null | head -n1 | xargs -I{} basename {} | sed -E 's/.*-([A-Za-z0-9_]+)\.[^.]+$/\1/')
           if [ -n "$ARCH_FROM_FILE" ]; then
-            echo "ARCH=$ARCH_FROM_FILE" >> $GITHUB_ENV
+            echo "ARCH=$ARCH_FROM_FILE" >> $GITHUB_OUTPUT
           else
-            # Map Node arch to common labels
             NODE_ARCH=$(node -p "process.arch")
             case "$NODE_ARCH" in
-              x64)   echo "ARCH=x86_64" >> $GITHUB_ENV ;;
-              arm64) echo "ARCH=arm64"  >> $GITHUB_ENV ;;
-              arm)   echo "ARCH=armv7l" >> $GITHUB_ENV ;;
-              *)     echo "ARCH=$NODE_ARCH" >> $GITHUB_ENV ;;
+              x64)   echo "ARCH=x86_64" >> $GITHUB_OUTPUT ;;
+              arm64) echo "ARCH=arm64"  >> $GITHUB_OUTPUT ;;
+              arm)   echo "ARCH=armv7l" >> $GITHUB_OUTPUT ;;
+              *)     echo "ARCH=$NODE_ARCH" >> $GITHUB_OUTPUT ;;
             esac
           fi
       - name: Upload AppImage
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.NAME }}-${{ env.VERSION }}-${{ env.ARCH }}-appimage
+          name: ${{ steps.meta.outputs.NAME }}-${{ steps.meta.outputs.VERSION }}-${{ steps.meta.outputs.ARCH }}-appimage
           path: dist/*.AppImage
           if-no-files-found: ignore
       - name: Upload DEB
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.NAME }}-${{ env.VERSION }}-${{ env.ARCH }}-deb
+          name: ${{ steps.meta.outputs.NAME }}-${{ steps.meta.outputs.VERSION }}-${{ steps.meta.outputs.ARCH }}-deb
           path: dist/*.deb
           if-no-files-found: ignore
       - name: Upload RPM
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.NAME }}-${{ env.VERSION }}-${{ env.ARCH }}-rpm
+          name: ${{ steps.meta.outputs.NAME }}-${{ steps.meta.outputs.VERSION }}-${{ steps.meta.outputs.ARCH }}-rpm
           path: dist/*.rpm
           if-no-files-found: ignore
       - name: Upload TAR.GZ
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.NAME }}-${{ env.VERSION }}-${{ env.ARCH }}-tar-gz
+          name: ${{ steps.meta.outputs.NAME }}-${{ steps.meta.outputs.VERSION }}-${{ steps.meta.outputs.ARCH }}-tar-gz
           path: dist/*.tar.gz
           if-no-files-found: ignore
       - name: Upload unpacked directory
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.NAME }}-${{ env.VERSION }}-${{ env.ARCH }}-unpacked
+          name: ${{ steps.meta.outputs.NAME }}-${{ steps.meta.outputs.VERSION }}-${{ steps.meta.outputs.ARCH }}-unpacked
           path: dist/linux-unpacked/**
           if-no-files-found: ignore
       - name: Upload metadata
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.NAME }}-${{ env.VERSION }}-${{ env.ARCH }}-metadata
+          name: ${{ steps.meta.outputs.NAME }}-${{ steps.meta.outputs.VERSION }}-${{ steps.meta.outputs.ARCH }}-metadata
           path: |
             dist/latest-linux.yml
             dist/linux-unpacked/resources/guest_server/winboat_guest_server.zip
