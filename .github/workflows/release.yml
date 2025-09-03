@@ -44,6 +44,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: "stable"
+          cache-dependency-path: "guest_server/go.sum"
       - name: Install dependencies
         run: npm ci
       - name: Build guest server and app
@@ -98,6 +99,12 @@ jobs:
           name: ${{ steps.meta.outputs.NAME }}-${{ steps.meta.outputs.VERSION }}-${{ steps.meta.outputs.ARCH }}-unpacked.zip
           path: dist/linux-unpacked/**
           if-no-files-found: ignore
+      - name: Upload guest server zip
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.meta.outputs.NAME }}-${{ steps.meta.outputs.VERSION }}-${{ steps.meta.outputs.ARCH }}-guest_server.zip
+          path: dist/linux-unpacked/resources/guest_server/winboat_guest_server.zip
+          if-no-files-found: ignore
       - name: Upload metadata
         uses: actions/upload-artifact@v4
         with:
@@ -120,6 +127,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: "stable"
+          cache-dependency-path: "guest_server/go.sum"
       - name: Build guest server only
         run: bash build-guest-server.sh
       - name: Upload guest server artifacts
@@ -152,6 +160,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: "stable"
+          cache-dependency-path: "guest_server/go.sum"
       - name: Install dependencies
         run: npm ci
       - name: Build guest server and app
