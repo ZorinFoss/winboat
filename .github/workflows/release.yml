@@ -71,31 +71,31 @@ jobs:
       - name: Upload AppImage
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.meta.outputs.NAME }}-${{ steps.meta.outputs.VERSION }}-${{ steps.meta.outputs.ARCH }}-appimage
+          name: ${{ steps.meta.outputs.NAME }}-${{ steps.meta.outputs.VERSION }}-${{ steps.meta.outputs.ARCH }}.appimage
           path: dist/*.AppImage
           if-no-files-found: ignore
       - name: Upload DEB
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.meta.outputs.NAME }}-${{ steps.meta.outputs.VERSION }}-${{ steps.meta.outputs.ARCH }}-deb
+          name: ${{ steps.meta.outputs.NAME }}-${{ steps.meta.outputs.VERSION }}-${{ steps.meta.outputs.ARCH }}.deb
           path: dist/*.deb
           if-no-files-found: ignore
       - name: Upload RPM
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.meta.outputs.NAME }}-${{ steps.meta.outputs.VERSION }}-${{ steps.meta.outputs.ARCH }}-rpm
+          name: ${{ steps.meta.outputs.NAME }}-${{ steps.meta.outputs.VERSION }}-${{ steps.meta.outputs.ARCH }}.rpm
           path: dist/*.rpm
           if-no-files-found: ignore
       - name: Upload TAR.GZ
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.meta.outputs.NAME }}-${{ steps.meta.outputs.VERSION }}-${{ steps.meta.outputs.ARCH }}-tar-gz
+          name: ${{ steps.meta.outputs.NAME }}-${{ steps.meta.outputs.VERSION }}-${{ steps.meta.outputs.ARCH }}.tar.gz
           path: dist/*.tar.gz
           if-no-files-found: ignore
       - name: Upload unpacked directory
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.meta.outputs.NAME }}-${{ steps.meta.outputs.VERSION }}-${{ steps.meta.outputs.ARCH }}-unpacked
+          name: ${{ steps.meta.outputs.NAME }}-${{ steps.meta.outputs.VERSION }}-${{ steps.meta.outputs.ARCH }}-unpacked.zip
           path: dist/linux-unpacked/**
           if-no-files-found: ignore
       - name: Upload metadata
