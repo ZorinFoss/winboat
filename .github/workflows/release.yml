@@ -54,18 +54,18 @@ jobs:
         id: meta
         shell: bash
         run: |
-          echo "NAME=$(node -p \"require('./package.json').name\")" >> $GITHUB_OUTPUT
-          echo "VERSION=$(node -p \"require('./package.json').version\")" >> $GITHUB_OUTPUT
+          node -e "const p=require('./package.json'); console.log('NAME='+p.name)" >> "$GITHUB_OUTPUT"
+          node -e "const p=require('./package.json'); console.log('VERSION='+p.version)" >> "$GITHUB_OUTPUT"
           ARCH_FROM_FILE=$(ls dist/*.{AppImage,deb,rpm,tar.gz} 2>/dev/null | head -n1 | xargs -I{} basename {} | sed -E 's/.*-([A-Za-z0-9_]+)\.[^.]+$/\1/')
           if [ -n "$ARCH_FROM_FILE" ]; then
-            echo "ARCH=$ARCH_FROM_FILE" >> $GITHUB_OUTPUT
+            echo "ARCH=$ARCH_FROM_FILE" >> "$GITHUB_OUTPUT"
           else
             NODE_ARCH=$(node -p "process.arch")
             case "$NODE_ARCH" in
-              x64)   echo "ARCH=x86_64" >> $GITHUB_OUTPUT ;;
-              arm64) echo "ARCH=arm64"  >> $GITHUB_OUTPUT ;;
-              arm)   echo "ARCH=armv7l" >> $GITHUB_OUTPUT ;;
-              *)     echo "ARCH=$NODE_ARCH" >> $GITHUB_OUTPUT ;;
+              x64)   echo "ARCH=x86_64" >> "$GITHUB_OUTPUT" ;;
+              arm64) echo "ARCH=arm64"  >> "$GITHUB_OUTPUT" ;;
+              arm)   echo "ARCH=armv7l" >> "$GITHUB_OUTPUT" ;;
+              *)     echo "ARCH=$NODE_ARCH" >> "$GITHUB_OUTPUT" ;;
             esac
           fi
       - name: Upload AppImage
