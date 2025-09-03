@@ -50,11 +50,44 @@ jobs:
         run: npm run build:linux-gs
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Upload artifacts
+      - name: Upload AppImage
         uses: actions/upload-artifact@v4
         with:
-          name: linux-artifacts
-          path: dist/*
+          name: linux-appimage
+          path: dist/*.AppImage
+          if-no-files-found: ignore
+      - name: Upload DEB
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-deb
+          path: dist/*.deb
+          if-no-files-found: ignore
+      - name: Upload RPM
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-rpm
+          path: dist/*.rpm
+          if-no-files-found: ignore
+      - name: Upload TAR.GZ
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-tar-gz
+          path: dist/*.tar.gz
+          if-no-files-found: ignore
+      - name: Upload unpacked directory
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-unpacked
+          path: dist/linux-unpacked/**
+          if-no-files-found: ignore
+      - name: Upload metadata
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-metadata
+          path: |
+            dist/latest-linux.yml
+            dist/linux-unpacked/resources/guest_server/winboat_guest_server.zip
+          if-no-files-found: ignore
 
   guest-server-only:
     runs-on: ubuntu-latest
