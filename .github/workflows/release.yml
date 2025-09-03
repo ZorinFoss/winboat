@@ -7,13 +7,34 @@ on:
       - main
     tags:
       - "v*"
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: 'Build type'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - linux-only
+          - guest-server-only
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && !startsWith(github.ref, 'refs/tags/')
+    if: |
+      (github.event_name == 'push' && !startsWith(github.ref, 'refs/tags/')) ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.build_type != 'guest-server-only')
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Show build type
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "Manual workflow triggered with build type: ${{ github.event.inputs.build_type }}"
+          else
+            echo "Automatic workflow triggered by ${{ github.event_name }}"
+          fi
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -34,21 +55,51 @@ jobs:
         with:
           name: linux-artifacts
           path: dist/*
-  release:
+
+  guest-server-only:
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/')
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.build_type == 'guest-server-only'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          cache: "npm"
+      - name: Show build type
+        run: echo "Manual workflow triggered with build type: guest-server-only"
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version: "stable"
+      - name: Build guest server only
+        run: bash build-guest-server.sh
+      - name: Upload guest server artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: guest-server-artifacts
+          path: guest_server/
+
+  release:
+    runs-on: ubuntu-latest
+    if: |
+      startsWith(github.ref, 'refs/tags/') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.build_type == 'all')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Show build type
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "Manual workflow triggered with build type: ${{ github.event.inputs.build_type }}"
+          else
+            echo "Release workflow triggered by tag: ${{ github.ref_name }}"
+          fi
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 'stable'
       - name: Install dependencies
         run: npm ci
       - name: Build guest server and app
