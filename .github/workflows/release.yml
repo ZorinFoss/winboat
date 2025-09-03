@@ -29,12 +29,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Show build type
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "Manual workflow triggered with build type: ${{ github.event_inputs.build_type }}"
-          else
-            echo "Automatic workflow triggered by ${{ github.event_name }}"
-          fi
+        run: if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then echo "Manual workflow triggered with build type: ${{ github.event_inputs.build_type }}"; else echo "Automatic workflow triggered by ${{ github.event_name }}"; fi
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -85,12 +80,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Show build type
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "Manual workflow triggered with build type: ${{ github.event_inputs.build_type }}"
-          else
-            echo "Release workflow triggered by tag: ${{ github.ref_name }}"
-          fi
+        run: if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then echo "Manual workflow triggered with build type: ${{ github.event_inputs.build_type }}"; else echo "Release workflow triggered by tag: ${{ github.ref_name }}"; fi
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -107,9 +97,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Zip unpacked variant
-        run: |
-          cd dist
-          zip -r winboat-linux-unpacked.zip linux-unpacked/
+        run: cd dist && zip -r winboat-linux-unpacked.zip linux-unpacked/
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
