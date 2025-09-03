@@ -16,7 +16,8 @@
   "linux": {
     "icon": "icons/winboat.png",
     "target": ["appimage", "deb", "rpm", "tar.gz"],
-    "category": "Utility"
+    "category": "Utility",
+    "artifactName": "${name}-${version}-${arch}.${ext}"
   },
   "files": [
     {
