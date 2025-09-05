@@ -32,6 +32,7 @@ const defaultCompose: ComposeConfig = {
                 "PASSWORD": "MyWindowsPassword",
                 "HOME": "${HOME}",
                 "LANGUAGE": "English",
+                "ARGUMENTS": "-cpu host,arch_capabilities=off"
             },
             "cap_add": [
                 "NET_ADMIN"
@@ -123,8 +124,11 @@ export class InstallManager {
         composeContent.services.windows.environment.LANGUAGE = this.conf.windowsLanguage;
         composeContent.services.windows.environment.USERNAME = this.conf.username;
         composeContent.services.windows.environment.PASSWORD = this.conf.password;
-
-
+        
+        if (this.conf.customIsoPath) {
+            composeContent.services.windows.volumes.push(`${this.conf.customIsoPath}:/boot.iso`);
+        }
+        
         // Write the compose file
         const composeYAML = YAML.stringify(composeContent).replaceAll("null", "");
         fs.writeFileSync(composeFilePath, composeYAML, { encoding: 'utf8' });
@@ -159,13 +163,36 @@ export class InstallManager {
             throw error;
         }
 
+        const copyRecursive = (src: string, dest: string) => {
+            const stats = fs.statSync(src);
+            
+            if (stats.isDirectory()) {
+                // Create directory if it doesn't exist
+                if (!fs.existsSync(dest)) {
+                    fs.mkdirSync(dest, { recursive: true });
+                }
+                
+                // Copy all contents
+                fs.readdirSync(src).forEach(entry => {
+                    const srcPath = path.join(src, entry);
+                    const destPath = path.join(dest, entry);
+                    copyRecursive(srcPath, destPath);
+                });
+                
+                logger.info(`Copied directory ${src} to ${dest}`);
+            } else {
+                // Copy file
+                fs.copyFileSync(src, dest);
+                logger.info(`Copied file ${src} to ${dest}`);
+            }
+        };
+
         // Copy all files from guest_server to oemPath
         try {
-            fs.readdirSync(appPath).forEach(file => {
-                const srcFile = path.join(appPath, file);
-                const destFile = path.join(oemPath, file);
-                fs.copyFileSync(srcFile, destFile);
-                logger.info(`Copied ${file} to ${destFile}`);
+            fs.readdirSync(appPath).forEach(entry => {
+                const srcPath = path.join(appPath, entry);
+                const destPath = path.join(oemPath, entry);
+                copyRecursive(srcPath, destPath);
             });
             logger.info("OEM assets created successfully");
         } catch (error) {

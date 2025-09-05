@@ -1,54 +1,54 @@
 {
-  "name": "winboat",
-  "version": "0.6.10",
-  "description": "Windows for Penguins",
-  "main": "main/main.js",
-  "scripts": {
-    "dev": "node scripts/dev-server.js",
-    "build-guest-server": "bash build-guest-server.sh",
-    "build:linux-gs": "bash build-guest-server.sh && node scripts/build.js && electron-builder --linux"
-  },
-  "repository": "https://github.com/TibixDev/winboat",
-  "author": {
-    "name": "TibixDev",
-    "email": "tibixdev@github.com",
-    "url": "https://github.com/TibixDev"
-  },
-  "devDependencies": {
-    "@types/json-to-pretty-yaml": "^1.2.1",
-    "@types/node-fetch": "^2.6.12",
-    "@types/screenshot-desktop": "^1.12.3",
-    "@types/turndown": "^5.0.5",
-    "@vitejs/plugin-vue": "^5.2.1",
-    "autoprefixer": "^10.4.20",
-    "chalk": "^4.1.2",
-    "chokidar": "^3.6.0",
-    "electron": "^35.1.5",
-    "electron-builder": "^26.0.12",
-    "postcss": "^8.5.1",
-    "tailwindcss": "^3.4.17",
-    "typescript": "~5.6.3",
-    "vite": "^6.0.7",
-    "vue-tsc": "^2.2.0"
-  },
-  "dependencies": {
-    "@electron/remote": "^2.1.2",
-    "@iconify/vue": "^4.3.0",
-    "@vueuse/core": "^13.1.0",
-    "@vueuse/motion": "^2.2.6",
-    "apexcharts": "^4.5.0",
-    "form-data": "^4.0.4",
-    "json-to-pretty-yaml": "^1.2.2",
-    "marked": "^15.0.6",
-    "nanoevents": "^9.1.0",
-    "node-fetch": "2",
-    "path-browserify": "^1.0.1",
-    "turndown": "^7.2.0",
-    "vue": "^3.5.13",
-    "vue-router": "^4.5.0",
-    "vue3-apexcharts": "^1.8.0",
-    "winston": "^3.17.0",
-    "xel": "^0.33.7",
-    "yaml": "^2.7.1"
-  }
+    "name": "winboat",
+    "version": "0.7.2",
+    "description": "Windows for Penguins",
+    "main": "main/main.js",
+    "scripts": {
+        "dev": "node scripts/dev-server.js",
+        "build-guest-server": "bash build-guest-server.sh",
+        "build:linux-gs": "bash build-guest-server.sh && node scripts/build.js && electron-builder --linux"
+    },
+    "repository": "https://github.com/TibixDev/winboat",
+    "author": {
+        "name": "TibixDev",
+        "url": "https://github.com/TibixDev"
+    },
+    "devDependencies": {
+        "@types/json-to-pretty-yaml": "^1.2.1",
+        "@types/node-fetch": "^2.6.12",
+        "@types/screenshot-desktop": "^1.12.3",
+        "@types/turndown": "^5.0.5",
+        "@vitejs/plugin-vue": "^5.2.1",
+        "autoprefixer": "^10.4.20",
+        "chalk": "^4.1.2",
+        "chokidar": "^3.6.0",
+        "electron": "^35.1.5",
+        "electron-builder": "^26.0.12",
+        "postcss": "^8.5.1",
+        "tailwindcss": "^3.4.17",
+        "typescript": "~5.6.3",
+        "vite": "^6.0.7",
+        "vue-tsc": "^2.2.0"
+    },
+    "dependencies": {
+        "@electron/remote": "^2.1.2",
+        "@iconify/vue": "^4.3.0",
+        "@vueuse/core": "^13.1.0",
+        "@vueuse/motion": "^2.2.6",
+        "apexcharts": "^4.5.0",
+        "form-data": "^4.0.4",
+        "jimp": "^1.6.0",
+        "json-to-pretty-yaml": "^1.2.2",
+        "marked": "^15.0.6",
+        "nanoevents": "^9.1.0",
+        "node-fetch": "2",
+        "path-browserify": "^1.0.1",
+        "turndown": "^7.2.0",
+        "vue": "^3.5.13",
+        "vue-router": "^4.5.0",
+        "vue3-apexcharts": "^1.8.0",
+        "winston": "^3.17.0",
+        "xel": "^0.33.7",
+        "yaml": "^2.7.1"
+    }
 }

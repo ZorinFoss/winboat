@@ -21,6 +21,7 @@ export type InstallConfiguration = {
     diskSpaceGB: number;
     username: string;
     password: string;
+    customIsoPath?: string;
 }
 
 export type WinApp = {
@@ -49,6 +50,7 @@ export type ComposeConfig = {
                 PASSWORD: string;
                 HOME: string;
                 LANGUAGE: string;
+                ARGUMENTS: string;
                 [key: string]: string; // Allow additional env vars
             };
             privileged: boolean;
